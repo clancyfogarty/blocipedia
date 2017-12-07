@@ -13,39 +13,9 @@
  *= require_tree .
  *= require_self
  */
-
  @import "bootstrap-sprockets";
  @import "bootstrap";
 
-/* User sign in and sign forms. */
-.border-form-div {
-  max-width: 300px;
-  padding: 19px 29px 29px;
-  margin: 0 auto 20px;
-  background-color: white;
-  border: 1px solid white;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  -webkit-box-shadow: 0 1px 2px grey;
-  -moz-box-shadow: 0 1px 2px grey;
-  box-shadow: 0 1px 2px grey;
-}
-
-.border-form-div .form-signin-heading,
-.border-form-div .checkbox {
-  margin-bottom: 10px;
-}
-
-  .border-form-div input[type="text"],
-  .border-form-div input[type="email"],
-  .border-form-div input[type="password"] {
-    font-size: 16px;
-    height: auto;
-    margin-bottom: 15px;
-    padding: 7px 9px;
-}
-
-input .btn-btn-primary {
-  padding-bottom: 100px;
+.email-nav {
+  padding: 11px 16px 11px 16px;
 }
