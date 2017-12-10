@@ -20,9 +20,11 @@
     <%= f.text_area :body, rows: 8, class: "form-control", placeholder: "Enter wiki content" %>
   <% end %>
 
-  <%= form_group_tag(wiki.errors[:private]) do %>
-    <%= f.label :private %>
-    <%= f.check_box :private ,{}, true, false %>
+  <% if private_wiki_access? %>
+    <%= form_group_tag(wiki.errors[:private]) do %>
+      <%= f.label :private %>
+      <%= f.check_box :private ,{}, true, false %>
+    <% end %>
   <% end %>
 
   <div class="form-group">

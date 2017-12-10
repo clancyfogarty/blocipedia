@@ -12,5 +12,7 @@
     <% end %>
   </div>
   <div class="col-md-4">
-    <%= link_to "New Wiki", new_wiki_path, class: "btn btn-primary" %>
+    <% if user_signed_in? %>
+      <%= link_to "New Wiki", new_wiki_path, class: "btn btn-primary" %>
+    <% end %>
   </div>
