@@ -1,0 +1,16 @@
+<h2>Upgrade to a premium membership!</h2>
+<ul>
+  <li>Unlimted private wikis.</li>
+  <li>Only $15 a month</li>
+</ul>
+<%= form_tag charges_path do %>
+  <script class='stripe-button'
+  src="https://checkout.stripe.com/checkout.js"
+  data-key="<%= @stripe_btn_data[:key] %>"
+  data-amount="<%= @stripe_btn_data[:amount] %>"
+  data-description="<%= @stripe_btn_data[:description] %>" ></script>
+<% end %>
+<br />
+<div class="form-group">
+  <%= link_to "Back", '../users/edit', class: 'btn btn-danger' %>
+</div>
