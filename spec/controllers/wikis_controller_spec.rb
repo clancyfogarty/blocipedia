@@ -3,26 +3,61 @@ require 'rails_helper'
 RSpec.describe WikisController, type: :controller do
   let(:my_user) { create(:user) }
   let(:my_wiki) { create(:wiki) }
+  let(:p_wiki) { create(:wiki, private: true) }
   let(:other_user) { create(:user) }
 
-  describe "GET index" do
-    it "returns http success" do
-      get :index
-      expect(response).to have_http_status(:success)
+  context "guest user not signed in" do
+    describe "GET index" do
+      it "returns http success" do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it "assigns Wiki.all to wiki" do
+        get :index
+        expect(assigns(:wikis)).to eq([my_wiki])
+      end
     end
 
-    it "assigns Wiki.all to wiki" do
-      get :index
-      expect(assigns(:wikis)).to eq([my_wiki])
+    describe "GET show" do
+      it "returns http success" do
+        get :show, params: { id: my_wiki.id }
+        expect(response).to have_http_status(:success)
+      end
+
+      it "renders the show view" do
+        get :show, params: { id: my_wiki.id }
+        expect(response).to render_template :show
+      end
+
+      it "assigns my_wiki to @wiki" do
+        get :show, params: { id: my_wiki.id }
+        expect(assigns(:wiki)).to eq(my_wiki)
+      end
+
+      it "returns http redirect for private wiki" do
+        get :show, params: { id: p_wiki.id }
+        expect(response).to have_http_status(:redirect)
+      end
+
     end
   end
 
   context "signed in standard user" do
     before do
-      sign_in other_user
-      other_wiki = Wiki.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: other_user, private: false)
-      sign_out other_user
       sign_in my_user
+    end
+
+    describe "GET index" do
+      it "returns http success" do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it "assigns Wiki.all to wiki" do
+        get :index
+        expect(assigns(:wikis)).to eq([my_wiki])
+      end
     end
 
     describe "GET show" do
@@ -577,13 +612,13 @@ RSpec.describe WikisController, type: :controller do
           delete :destroy, params: { id: my_wiki.id }
           count = Wiki.where({id: my_wiki.id}).size
           expect(count).to eq 1
-       end
+        end
 
-       it "redirects to wiki index" do
-         delete :destroy, params: { id: my_wiki.id }
-         expect(response).to redirect_to wikis_path
-       end
-     end
-   end
- end
+        it "redirects to wiki index" do
+          delete :destroy, params: { id: my_wiki.id }
+          expect(response).to redirect_to wikis_path
+        end
+      end
+    end
+  end
 end

@@ -6,9 +6,9 @@ class WikiPolicy < ApplicationPolicy
 
   def show?
     if record.private?
-      user.admin? || user.premium?
+      user && (user.admin? || user.premium?)
     else
-      user.present?
+      true
     end
   end
 
@@ -25,7 +25,11 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def update?
-    user.present?
+    if record.private?
+      user.admin? || user.premium?
+    else
+      user.present?
+    end
   end
 
   def edit?
@@ -33,13 +37,13 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.admin?
+    user && user.admin?
   end
 
   class Scope < Scope
     def resolve
-      if user.admin? || user.premium?
-        scope
+      if user && (user.admin? || user.premium?)
+        scope.all
       else
         scope.where(private: false)
       end
