@@ -1,9 +1,8 @@
 class WikisController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  
+
   def index
-    @wikis = policy_scope(Wiki.all)
-    authorize @wikis
+    @wikis = policy_scope(Wiki)
   end
 
   def show
@@ -19,6 +18,18 @@ class WikisController < ApplicationController
   def create
     @wiki = Wiki.new(wiki_params)
     @wiki.user = current_user
+
+    if @wiki.private?
+      params[:wiki][:collaborator_ids].each do |c|
+        if c == ''
+          @wiki.collaborators.clear
+        else
+          collaborator = User.find(c)
+          @wiki.collaborators << Collaborator.new(user_id: collaborator.id, wiki_id: params[:id])
+        end
+      end
+    end
+
     authorize @wiki
 
     if @wiki.save
@@ -38,6 +49,18 @@ class WikisController < ApplicationController
   def update
     @wiki = Wiki.find(params[:id])
     @wiki.assign_attributes(wiki_params)
+
+    if @wiki.private?
+      params[:wiki][:collaborator_ids].each do |c|
+        if c == ''
+          @wiki.collaborators.clear
+        else
+          collaborator = User.find(c)
+          @wiki.collaborators << Collaborator.new(user_id: collaborator.id, wiki_id: params[:id])
+        end
+      end
+    end
+
     authorize @wiki
 
     if @wiki.save

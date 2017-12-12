@@ -22,12 +22,23 @@
 
   <% if private_wiki_access? %>
     <%= form_group_tag(wiki.errors[:private]) do %>
-      <%= f.label :private %>
       <%= f.check_box :private ,{}, true, false %>
+      <%= f.label :private %>
+      <% end %>
     <% end %>
+    <% if private_wiki_access? %>
+      <div class="form-group">
+      <%= f.collection_check_boxes :collaborator_ids, User.all, :id, :email do |b| %>
+        <div class="checkbox">
+          <%= b.check_box %>
+          <%= b.label %>
+        </div>
+      <% end %>
+    </div>
   <% end %>
 
   <div class="form-group">
     <%= f.submit "Save", class: "btn btn-success" %>
   </div>
+
 <% end %>

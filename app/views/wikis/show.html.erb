@@ -1,6 +1,9 @@
 <div class="row">
   <div class="col-md-8">
     <h1><%= @wiki.title %></h1>
+    <small>
+      <%= @wiki.user.email %>
+    </small><br />
     <% if policy(@wiki).update? %>
       <%= link_to "Edit", edit_wiki_path, class: "btn btn-sm btn-success" %>
     <% end %>
@@ -10,5 +13,13 @@
     <p>
       <%= markdown(@wiki.body) %>
     </p>
+    <h5>Collaborators</h5>
+    <small>
+      <ul class="list-unstyled">
+        <% @wiki.collaborators.each do |c| %>
+          <li><%= User.find(c.user_id).email %></li>
+        <% end %>
+      </ul>
+    </small>
   </div>
 </div>

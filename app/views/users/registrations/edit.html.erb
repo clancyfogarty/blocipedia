@@ -41,11 +41,7 @@
     </div>
   <% end %>
   <% if current_user.premium? %>
-    <h3>Downgrade to Standard</h3>
-    <ul>
-      <li>All private wikis will become public!</li>
-    </ul>
-    <%= button_to "Downgrade", users_registrations_downgrade_path, class: 'btn btn-danger', method: :downgrade %>
+    <%= button_to "Downgrade Accout", users_registrations_downgrade_path, class: 'btn btn-danger', method: :patch %>
   <% end %>
 
   <h3>Cancel my account</h3>

@@ -17,11 +17,20 @@
 end
 users = User.all
 
-50.times do
+10.times do
   Wiki.create!(
     title: Faker::Lorem.unique.sentence,
     body: Faker::Lorem.paragraph,
     user: users.sample
+  )
+end
+
+wikis = Wiki.all
+
+10.times do
+  Collaborator.create!(
+    wiki_id: wikis.sample.id,
+    user_id: users.sample.id
   )
 end
 
@@ -51,3 +60,4 @@ standard = User.create!(
 puts "Seed finished"
 puts "#{User.count} users created"
 puts "#{Wiki.count} wikis created"
+puts "#{Collaborator.count} collaborators created

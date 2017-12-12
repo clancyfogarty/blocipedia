@@ -5,10 +5,12 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def show?
-    if record.private?
-      user && (user.admin? || user.premium?)
-    else
+    if user && user.admin?
       true
+    elsif user && user.premium?
+      !record.private || record.user == user || record.collaborators.exists?(user_id: user.id)
+    else
+      !record.private || record.collaborators.exists?(user_id: user.id)
     end
   end
 
@@ -42,11 +44,23 @@ class WikiPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user && (user.admin? || user.premium?)
-        scope.all
-      else
-        scope.where(private: false)
-      end
+      wikis = []
+        if user && user.admin?
+          wikis = scope.all
+        elsif user && user.premium?
+          scope.all.each do |wiki|
+            if !wiki.private || wiki.user == user || wiki.collaborators.exists?(user_id: user.id)
+              wikis << wiki
+            end
+          end
+        else
+          scope.all.each do |wiki|
+            if !wiki.private || wiki.collaborators.exists?(user_id: user.id)
+              wikis << wiki
+            end
+          end
+        end
+        wikis
     end
   end
 end
